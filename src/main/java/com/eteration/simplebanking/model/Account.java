@@ -5,7 +5,6 @@ import com.eteration.simplebanking.model.base.BaseModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,10 +14,11 @@ import javax.persistence.Table;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "account", indexes = @Index(columnList = "accountNumber"))
 @AllArgsConstructor
-@NoArgsConstructor
 @Data
 @Entity
 public class Account extends BaseModel {
+    public Account() {
+    }
 
     public Account(Long id, String accountNumber, String owner, Double balance) {
         this.setId(id);

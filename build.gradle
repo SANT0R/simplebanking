@@ -28,17 +28,21 @@ dependencies {
   implementation 'mysql:mysql-connector-java:8.0.33'
   implementation 'org.mapstruct:mapstruct:1.6.2'
   testImplementation 'com.unboundid:unboundid-ldapsdk'
+  testImplementation 'com.h2database:h2'
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
+  testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa'
   annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.2'
   implementation group: 'io.springfox', name: 'springfox-swagger2', version: '3.0.0'
   implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.10.5'
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 
-  testImplementation('org.springframework.boot:spring-boot-starter-test') {
-		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-	}
+//  testImplementation('org.springframework.boot:spring-boot-starter-test') {
+//		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+//	}
   developmentOnly 'org.springframework.boot:spring-boot-devtools'
-  testImplementation('org.mockito:mockito-core')
-  runtimeOnly 'com.mysql:mysql-connector-java'
+//  testImplementation('org.mockito:mockito-core')
+//  runtimeOnly 'com.mysql:mysql-connector-java'
 }
 
 test {

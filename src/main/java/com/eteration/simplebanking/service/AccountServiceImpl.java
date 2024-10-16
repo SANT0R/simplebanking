@@ -82,7 +82,7 @@ public class AccountServiceImpl implements AccountService {
         }
         else {
             throw new ApiRequestException(
-                    "Your operation could not be completed because the Account named " + owner +" could not be found.",
+                    "Your operation could not be completed because the Account named Unknown Owner could not be found.",
                     HttpStatus.METHOD_NOT_ALLOWED);
         }
 

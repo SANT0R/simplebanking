@@ -44,8 +44,7 @@ public class TransactionServiceImpl implements TransactionService {
         AccountDto accountDto = accountService.getByAccountNumber(transactionDto.getAccountNumber());
         if (accountDto.getBalance() < transactionDto.getAmount()) {
             throw new ApiRequestException(
-                    "Your operation could not be completed because the Account balance is not enough." +
-                            "\n Your balance is " + accountDto.getBalance() + ".",
+                    "Account balance is not enough",
                     HttpStatus.METHOD_NOT_ALLOWED);
         }
 
@@ -72,6 +71,7 @@ public class TransactionServiceImpl implements TransactionService {
             transactionHistoryResponseDto.setDate(depositTransaction.getDate());
             transactionHistoryResponseDto.setTransactionType(depositTransaction.getTransactionType());
 
+            transactionHistoryResponseDtoList.add(transactionHistoryResponseDto);
         });
 
         withdrawalTransactionList.forEach(withdrawalTransaction -> {
@@ -81,6 +81,7 @@ public class TransactionServiceImpl implements TransactionService {
             transactionHistoryResponseDto.setDate(withdrawalTransaction.getDate());
             transactionHistoryResponseDto.setTransactionType(withdrawalTransaction.getTransactionType());
 
+            transactionHistoryResponseDtoList.add(transactionHistoryResponseDto);
         });
 
         return transactionHistoryResponseDtoList;

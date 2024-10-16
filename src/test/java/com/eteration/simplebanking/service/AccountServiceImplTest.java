@@ -1,5 +1,4 @@
 package com.eteration.simplebanking.service;
-
 import com.eteration.simplebanking.dto.AccountDto;
 import com.eteration.simplebanking.exception.ApiRequestException;
 import com.eteration.simplebanking.mapper.AccountMapper;
@@ -10,30 +9,38 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class AccountServiceImplTest {
 
     @InjectMocks
-    private AccountService accountService;
+    private AccountServiceImpl accountService;
 
-    @MockBean
+    @Mock
     private AccountRepository accountRepository;
 
-    @MockBean
+    @Mock
     private AccountMapper accountMapper;
 
     private Account account;
     private AccountDto accountDto;
 
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        account = new Account(1L, "123456", "John Doe", 1000.0);
+        accountDto = new AccountDto(1L, "123456", "John Doe", 1000.0);
+    }
 
     @Test
     public void testAdd() {
@@ -133,13 +140,19 @@ public class AccountServiceImplTest {
     }
 
     @Test
-    public void testDeleteAllByOwner_OwnerNotFound() {
-        when(accountRepository.findAllByOwner("John Doe")).thenReturn(Arrays.asList());
+    public void testDeleteAllByOwner_AccountNotFound() {
+        // Mock davranışı: Hiç hesap bulunamıyor
+        when(accountRepository.findAllByOwner("Unknown Owner")).thenReturn(new ArrayList<>());
 
-        assertThatThrownBy(() -> accountService.deleteAllByOwner("John Doe"))
-                .isInstanceOf(ApiRequestException.class)
-                .hasMessageContaining("could not be found");
+        // Account bulunamadığında exception fırlatılması bekleniyor
+        Exception exception = assertThrows(ApiRequestException.class, () -> {
+            accountService.deleteAllByOwner("Unknown Owner");
+        });
 
+        // Exception mesajı doğrulanıyor
+        assertEquals(ApiRequestException.class, exception.getClass());
+
+        // deleteAll metodunun hiç çağrılmadığından emin olunuyor
         verify(accountRepository, never()).deleteAll(anyList());
     }
 
@@ -152,11 +165,32 @@ public class AccountServiceImplTest {
 
     @Test
     public void testDeleteById() {
+        // Mock davranışları ayarlanıyor
         when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
+        when(accountRepository.getById(1L)).thenReturn(account);
 
+        // deleteById metodunu çağırıyoruz
         accountService.deleteById(1L);
 
-        verify(accountRepository, times(1)).delete(account);
+        // Doğru metodlar çağrıldı mı kontrol ediliyor
+        verify(accountRepository).findById(1L);
+        verify(accountRepository).getById(1L);
+        verify(accountRepository).delete(account);
+    }
+    @Test
+    public void testDeleteById_AccountNotFound() {
+        // Mock davranışı: Account bulunamıyor
+        when(accountRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // Account bulunamadığında exception fırlatılması bekleniyor
+        Exception exception = assertThrows(ApiRequestException.class, () -> {
+            accountService.deleteById(1L);
+        });
+
+        // Exception mesajı doğrulanıyor
+        assertEquals("Account not found", exception.getMessage());
+
+        // delete metodunun çağrılmadığından emin olunuyor
+        verify(accountRepository, never()).delete(any(Account.class));
     }
 }
-

@@ -1,4 +1,5 @@
 package com.eteration.simplebanking.controller;
+
 import com.eteration.simplebanking.dto.AccountDto;
 import com.eteration.simplebanking.dto.BetweenDto;
 import com.eteration.simplebanking.service.AccountService;
@@ -31,7 +32,7 @@ public class AccountControllerTest {
         AccountDto accountDto = new AccountDto();
         accountDto.setAccountNumber("123456");
 
-        mockMvc.perform(post("/add")
+        mockMvc.perform(post("/account/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"accountNumber\":\"123456\"}"))
                 .andExpect(status().isOk());
@@ -44,7 +45,7 @@ public class AccountControllerTest {
         AccountDto accountDto = new AccountDto();
         accountDto.setAccountNumber("123456");
 
-        mockMvc.perform(put("/update")
+        mockMvc.perform(put("/account/update")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"accountNumber\":\"123456\"}"))
                 .andExpect(status().isOk());
@@ -54,7 +55,7 @@ public class AccountControllerTest {
 
     @Test
     public void testDeleteAccount() throws Exception {
-        mockMvc.perform(delete("/delete")
+        mockMvc.perform(delete("/account/delete")
                         .param("id", "1"))
                 .andExpect(status().isOk());
 
@@ -65,7 +66,7 @@ public class AccountControllerTest {
     public void testDeleteAllByOwner() throws Exception {
         String owner = "John";
 
-        mockMvc.perform(delete("/deleteAllByOwner/John"))
+        mockMvc.perform(delete("/account/deleteAllByOwner/John"))
                 .andExpect(status().isOk());
 
         verify(accountService, times(1)).deleteAllByOwner(owner);
@@ -73,7 +74,7 @@ public class AccountControllerTest {
 
     @Test
     public void testDeleteAll() throws Exception {
-        mockMvc.perform(delete("/deleteAll"))
+        mockMvc.perform(delete("/account/deleteAll"))
                 .andExpect(status().isOk());
 
         verify(accountService, times(1)).deleteAll();
@@ -81,7 +82,7 @@ public class AccountControllerTest {
 
     @Test
     public void testGetAccount() throws Exception {
-        mockMvc.perform(get("/get/1"))
+        mockMvc.perform(get("/account/get/1"))
                 .andExpect(status().isOk());
 
         verify(accountService, times(1)).getById(1L);
@@ -93,7 +94,7 @@ public class AccountControllerTest {
 
         when(accountService.getByAccountNumber(accountNumber)).thenReturn(new AccountDto());
 
-        mockMvc.perform(get("/getByAccountNumber/123456"))
+        mockMvc.perform(get("/account/getByAccountNumber/123456"))
                 .andExpect(status().isOk());
 
         verify(accountService, times(1)).getByAccountNumber(accountNumber);
@@ -105,7 +106,7 @@ public class AccountControllerTest {
 
         when(accountService.getByOwner(owner)).thenReturn(Collections.emptyList());
 
-        mockMvc.perform(get("/getByOwner/John"))
+        mockMvc.perform(get("/account/getByOwner/John"))
                 .andExpect(status().isOk());
 
         verify(accountService, times(1)).getByOwner(owner);
@@ -119,7 +120,7 @@ public class AccountControllerTest {
 
         when(accountService.getByBalance(100.0, 500.0)).thenReturn(Collections.emptyList());
 
-        mockMvc.perform(get("/getByBalance")
+        mockMvc.perform(get("/account/getByBalance")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"value1\":100.0, \"value2\":500.0}"))
                 .andExpect(status().isOk());
@@ -131,7 +132,7 @@ public class AccountControllerTest {
     public void testGetAll() throws Exception {
         when(accountService.getAll()).thenReturn(Collections.emptyList());
 
-        mockMvc.perform(get("/getAll"))
+        mockMvc.perform(get("/account/getAll"))
                 .andExpect(status().isOk());
 
         verify(accountService, times(1)).getAll();
