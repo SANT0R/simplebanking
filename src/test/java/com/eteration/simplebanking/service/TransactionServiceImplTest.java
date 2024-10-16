@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,19 +30,19 @@ public class TransactionServiceImplTest {
     @InjectMocks
     private TransactionService transactionService;
 
-    @Mock
+    @MockBean
     private DepositTransactionRepository depositRepository;
 
-    @Mock
+    @MockBean
     private WithdrawalTransactionRepository withdrawalRepository;
 
-    @Mock
+    @MockBean
     private AccountService accountService;
 
-    @Mock
+    @MockBean
     private DepositTransactionMapper depositMapper;
 
-    @Mock
+    @MockBean
     private WithdrawalTransactionMapper withdrawalMapper;
 
     private AccountDto accountDto;
@@ -50,15 +51,7 @@ public class TransactionServiceImplTest {
     private DepositTransaction depositTransaction;
     private WithdrawalTransaction withdrawalTransaction;
 
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-        accountDto = new AccountDto(1L, "123456", "John Doe", 1000.0);
-        depositTransactionDto = new DepositTransactionDto(1L, "123456", 200.0, null);
-        withdrawalTransactionDto = new WithdrawalTransactionDto(2L, "123456", 100.0, null);
-        depositTransaction = new DepositTransaction();
-        withdrawalTransaction = new WithdrawalTransaction();
-    }
+
 
     @Test
     public void testDoTransaction_Deposit() {

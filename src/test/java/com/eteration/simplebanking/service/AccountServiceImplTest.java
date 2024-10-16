@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,21 +25,15 @@ public class AccountServiceImplTest {
     @InjectMocks
     private AccountService accountService;
 
-    @Mock
+    @MockBean
     private AccountRepository accountRepository;
 
-    @Mock
+    @MockBean
     private AccountMapper accountMapper;
 
     private Account account;
     private AccountDto accountDto;
 
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-        account = new Account(1L, "123456", "John Doe", 1000.0);
-        accountDto = new AccountDto(1L, "123456", "John Doe", 1000.0);
-    }
 
     @Test
     public void testAdd() {
